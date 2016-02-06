@@ -1,3 +1,21 @@
+install_custom_packages() {
+  local build_dir=${1:-}
+
+  if [ -e $build_dir/.packages ]; then
+    packages=`cat $build_dir/.packages | tr '\n' ' '`
+    if [ `which apt-get` ]; then
+      apt-get -y install $packages
+    elif [ `which yum` ]; then
+      yum -y install $packages
+    elif [ `which pacman` ]; then
+      pacman -Sy $packages
+    else
+      echo "No known package manager found!"
+    fi
+  else
+    echo ".packages file not found"
+  fi
+}
 install_node_modules() {
   local build_dir=${1:-}
 
